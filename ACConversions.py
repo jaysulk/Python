@@ -6,7 +6,7 @@ Created on Thu Nov  3 15:50:42 2016
 
 @author: jsulskis
 
-Make sure MATLABFileIO.py is in your PYTHONPATH !!
+Make sure ACConversions.py is in your PYTHONPATH !!
 
 """
 
