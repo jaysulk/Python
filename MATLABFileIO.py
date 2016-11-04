@@ -60,3 +60,9 @@ def ftell(fileID):
     # return tell
     return fileID.tell()
 
+def frewind(fileID):
+    # return to begining of file
+    fseek(fileID, 0, 'bof')
+
+
+
