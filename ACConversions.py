@@ -5,6 +5,7 @@ Useful Conversions for Aircraft Research
 Created on Thu Nov  3 15:50:42 2016
 
 @author: jsulskis
+@requires geopy
 
 Make sure ACCoversions.py is in your PYTHONPATH !!
 
@@ -27,6 +28,7 @@ Make sure ACCoversions.py is in your PYTHONPATH !!
 
 import math
 import numpy as np
+from geopy.distance import great_circle
 
 """ Convert from NED to Aircraft Coordinates """
 def NedToAircraft(azNed, elNed, roll, pitch, yaw):
@@ -49,3 +51,18 @@ def NedToAircraft(azNed, elNed, roll, pitch, yaw):
 
     return azAc, elAc
 
+""" Calculate list of Slant Ranges """
+def CalculateSlantRanges(data, survey = [np.nan,np.nan]):
+    
+    lat = survey[0]
+    lon = survey[1]
+    if len(survey) > 2:
+        alt = survey[2]
+    else:
+        alt = 0.0
+
+    ranges = []
+    for row in data.itertuples():
+        ranges.append(math.sqrt((great_circle((row[1],row[2]), (lat,lon)).meters)**2 + ((row[3]*0.3048)-alt)**2))
+        
+    return ranges
