@@ -26,6 +26,7 @@ Make sure IRIGConversions.py is in your PYTHONPATH !!
 """
 
 import numpy as np
+import math
 
 """ Convert number of seconds to IRIG time dictionary """
 def SecToIrig(sec):
@@ -48,6 +49,15 @@ def SecToIrig(sec):
     # return irig time dictionary
     return irig
 
+""" Convert IRIG time to Seconds """    
+def IrigToSec(irig):
+    
+    # convert IRIG time to seconds
+    tSec = float(irig[0:3])*24*60*60 + float(irig[4:6])*60*60 + float(irig[7:9])*60 + float(irig[10:])
+
+    # return time in seconds
+    return tSec
+
 """ Convert time dictionary to seconds """
 def IrigDictToSec(time):
     # convert IRIG time to seconds
@@ -55,4 +65,27 @@ def IrigDictToSec(time):
 
     # return time in seconds
     return tSec
+
+""" Convert Seconds to IRIG string """
+def SecToIrigStr(time):
+    
+    irig = []
+
+    for sec in time:    
+        # calculate day, hour, minute and second
+        day = np.floor(sec/(24*60*60))
+        sec = sec - day*24*60*60
+        hr = np.floor(sec/(60*60))
+        sec = sec - hr*60*60
+        mins = np.floor(sec/60)
+        sec = sec - mins*60
+    
+        # convert to string
+        if math.isnan(sec):
+            irig.append('')
+        else:
+            irig.append('{0:003d}:{1:02d}:{2:02d}:{3:06.3f}'.format(int(day), int(hr), int(mins), float(sec)))
+        
+    return irig
+
 
