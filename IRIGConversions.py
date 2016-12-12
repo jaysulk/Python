@@ -53,7 +53,10 @@ def SecToIrig(sec):
 def IrigToSec(irig):
     
     # convert IRIG time to seconds
-    tSec = float(irig[0:3])*24*60*60 + float(irig[4:6])*60*60 + float(irig[7:9])*60 + float(irig[10:])
+    if ':' in irig:
+        tSec = float(irig[0:3])*24.0*60.0*60.0 + float(irig[4:6])*60.0*60.0 + float(irig[7:9])*60.0 + float(irig[10:])
+    else:
+        tSec = float(irig[0:3])*24.0*60.0*60.0 + float(irig[3:5])*60.0*60.0 + float(irig[5:7])*60.0 + float(irig[7:9])
 
     # return time in seconds
     return tSec
