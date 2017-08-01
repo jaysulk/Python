@@ -39,3 +39,4 @@ c1 = 2*math.pi*h*c**2 # W m^2 sr^-1
 c2 = h*c/kB # m K
 Gammad = g/Cpd #K m^-1
 Kappa = np.float64(2.40e-1) # J m^-1 s^-1 K^-1
+sigmaT = np.float64(5.670367e-8) # W m^-2 K^-4
