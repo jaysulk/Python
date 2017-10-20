@@ -23,12 +23,12 @@ def es(T):
     
 # Function to calculate the saturation vapor pressure of LW. T is in K.
 def bolton(T):
-    T = T - 273.15
+    T = T - phycon.Tko
     return 6.1121*np.exp((17.67*T)/(T+243.5))
 
 # Function to calculate the saturation vapor pressure of LW. T is in K.
 def buck_water(T):
-    T = T - 273.15
+    T = T - phycon.Tko
     
     x = 18.678-(T/234.5)
     y = T/(257.14+T)
@@ -37,7 +37,7 @@ def buck_water(T):
 
 # Function to calculate the saturation vapor pressure of ice. T is in K.
 def buck_ice(T):
-    T = T - 273.15
+    T = T - phycon.Tko
     
     x = 23.036-(T/337.7)
     y = T/(279.82+T)
@@ -94,3 +94,48 @@ def gamma_l(T, P):
     
     # Return value of gamma_l
     return (gamma*x)-y
+
+# Function to determine the lifted condensation level using a "Skew-T method"
+# Tf/Tdf is in C, Pf in hPa.
+def cloudbase(Tf,Tdf,Pf):
+    # Define Arrays
+    T=(np.arange(801)*0.1)-30 # Create T array
+    TK=T+phycon.Tko # Convert from degrees C to K
+    P=np.arange(801)+250 # Create P array
+    P=P[::-1]  # Reverse P array so Higher pressure is first &
+    PA = P*100.0  # convert to Pa
+    Es = es(TK)  # Define Saturation Vapour Pressure
+    
+    PP = (1e5/PA)**(phycon.Rd/phycon.Cpd) 
+    
+    # Define Potential Temperature
+    theta = np.outer(TK,PP)
+     
+    # Define Saturation Mixing Ratio in g/kg
+    Ws = np.empty((TK.size,PP.size))
+    for idx, line in enumerate(Ws):
+        Ws[:,idx] = 1000*phycon.epsilon*Es[:]/(PA[idx]-Es[:])
+      
+    # Define Equivalent Potential Temperature
+    thetaE = np.empty((TK.size,PP.size))
+    for idx, line in enumerate(thetaE):
+        thetaE[idx,:] = theta[idx,:]*np.exp((phycon.Lvo*Ws[idx,:])/(phycon.Cpd*TK[idx]))
+       
+    # Calculate LCL
+    indP = np.abs(P-Pf).argmin()
+    indT = np.abs(T-Tf).argmin()
+    indTd = np.abs(T-Tdf).argmin()
+    theta0=theta[indT,indP]
+    Wd=Ws[indTd,indP]
+    WLCL=Ws[indT,indP]
+    while Wd < WLCL:
+        PLCL=P[indP]
+        indTheta = np.abs(theta[:,indP]-theta0).argmin()
+        thetaLCL=theta[indTheta,indP]
+        thetaELCL=thetaE[indTheta,indP]
+        TLCL=T[indTheta]
+        WLCL=Ws[indTheta,indP]
+        indP+=1
+        
+    # return parameters at cloud base
+    return [PLCL,TLCL,WLCL,thetaLCL,thetaELCL]
