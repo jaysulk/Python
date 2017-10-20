@@ -73,6 +73,16 @@ def gamma_s(T, P):
     # Return value of gamma_s
     return gamma_d*((1.0+x)/(1.0+y))
 
+# Function to determine the Potential Temperature. T is in K, P in Pa.
+def theta(T, P):
+    # Return Potential Temperature
+    return T*(phycon.Po/P)**(phycon.Rd/phycon.Cpd) 
+
+# Function to determine the Equiv. Potential Temperature. T is in K, P in Pa.
+def theta_E(T, P):
+    # Return Equivalent Potential Temperature
+    return theta(T, P)*np.exp((phycon.Lvo*ws(T, P)/(phycon.Cpd*T)))
+
 # Function to determine the LWC lapse rate. T is in K, P in Pa.
 def gamma_l(T, P):
     H = 8500. # Assumed average scale height of 8.5 km
@@ -119,7 +129,8 @@ def cloudbase(Tf,Tdf,Pf):
     # Define Equivalent Potential Temperature
     thetaE = np.empty((TK.size,PP.size))
     for idx, line in enumerate(thetaE):
-        thetaE[idx,:] = theta[idx,:]*np.exp((phycon.Lvo*Ws[idx,:])/(phycon.Cpd*TK[idx]))
+        thetaE[idx,:] = theta[idx,:]*np.exp((phycon.Lvo*
+              Ws[idx,:])/(phycon.Cpd*TK[idx]))
        
     # Calculate LCL
     indP = np.abs(P-Pf).argmin()
