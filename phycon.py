@@ -40,3 +40,6 @@ c2 = h*c/kB # m K
 Gammad = g/Cpd #K m^-1
 Kappa = np.float64(2.40e-1) # J m^-1 s^-1 K^-1
 sigmaT = np.float64(5.670367e-8) # W m^-2 K^-4
+a = 6.378137e6  # m
+b = 6.3567523142e6  # m
+f = 1/298.257223563  # unitless
