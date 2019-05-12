@@ -70,7 +70,7 @@ def gamma_s(T, P):
     x2 = phycon.Rd*T
     x = x1/x2
     y1 = phycon.epsilon*L**2.0*w
-    y2 = phycon.cpd*phycon.Rd*T**2.0
+    y2 = phycon.Cpd*phycon.Rd*T**2.0
     y = y1/y2
     
     # Return value of gamma_s
