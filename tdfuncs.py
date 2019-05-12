@@ -11,7 +11,10 @@ Requires: phycon.py
 import numpy as np
 
 # Call useful TD variables.
-import phycon
+from phycon import phycon
+
+# instantiate phycon object
+phycon = phycon()
 
 # Function to calculate the saturation vapor pressure. T is in K.
 def es(T):
